@@ -26,6 +26,26 @@ public class DoubleWheelPicker extends LinearLayout {
     private WheelView mWheelView2;
     private WheelAdapter mWheelAdapter2;
     private WheelAdapter mWheelAdapter1;
+    private OnDoubleWheelItemSelectedListener onDoubleWheelItemSelectedListener;
+
+
+    public int getLeftCurrentItem() {
+        return mWheelView1.getCurrentItem();
+    }
+
+    public void setLeftCurrentItem(int leftCurrentItem) {
+        mWheelView1.setCurrentItem(leftCurrentItem);
+    }
+
+    public int getRightCurrentItem() {
+        return mWheelView2.getCurrentItem();
+    }
+
+    public void setRightCurrentItem(int rightCurrentItem) {
+        mWheelView2.setCurrentItem(rightCurrentItem);
+    }
+
+
 
     public DoubleWheelPicker(Context context) {
         super(context);
@@ -58,7 +78,9 @@ public class DoubleWheelPicker extends LinearLayout {
                 Log.e("main",""+index);
                 if (mWheelView2.getCurrentItem()<index){
                     mWheelView2.setCurrentItem(index);
+                    onDoubleWheelItemSelectedListener.onRightItemSelected(mWheelView1.getCurrentItem());
                 }
+                onDoubleWheelItemSelectedListener.onLeftItemSelected(index);
 
             }
         });
@@ -68,6 +90,9 @@ public class DoubleWheelPicker extends LinearLayout {
                 if (mWheelView1.getCurrentItem()>index){
                     Toast.makeText(mContext,"最大年龄不能小于最小年龄",Toast.LENGTH_SHORT).show();
                     mWheelView2.setCurrentItem(mWheelView1.getCurrentItem());
+                    onDoubleWheelItemSelectedListener.onRightItemSelected(mWheelView1.getCurrentItem());
+                }else {
+                    onDoubleWheelItemSelectedListener.onRightItemSelected(index);
                 }
 
 
@@ -77,8 +102,11 @@ public class DoubleWheelPicker extends LinearLayout {
         mWheelView2.setAdapter(mWheelAdapter2);
 
     }
+    public final void setOnDoubleWheelItemSelectedListener(OnDoubleWheelItemSelectedListener onDoubleWheelItemSelectedListener) {
+        this.onDoubleWheelItemSelectedListener = onDoubleWheelItemSelectedListener;
+    }
 
-    public ArrayList setData(int min, int max){
+    public final ArrayList setData(int min, int max){
         if (min>max){
             max=min;
         }
